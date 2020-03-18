@@ -4,11 +4,13 @@ import Foundation
 //Learning Objectives 245, 246, 247, 249, 263, 327, 329, 330, 333, 343, 344, 345, 370, 371
 //Aplicando em pedra, papel e tesoura:
 
-func voceGanhou(jogada:String){
+func voceGanhou(jogadaAux:String){
     let possiveisJogadas = ["pedra", "papel", "tesoura"]
     let jogadaMaquina = Int.random(in:0..<3)
     
     print("A máquina jogou \(possiveisJogadas[jogadaMaquina])\n")
+    let jogada = jogadaAux.lowercased()
+
     switch jogada {
     case "pedra":
         if jogadaMaquina == 0{
@@ -41,20 +43,18 @@ func voceGanhou(jogada:String){
 
 print("PEDRA, PAPEL ou TESOURA! Escolha digitando pedra, papel ou tesoura. Digite q para sair.\n")
 
-var loop = true
-
 repeat {
     print("\nFaça sua jogada:")
     let jogada = readLine()
     print("")
     if let jogadaAux = jogada{ 
-        if jogada == "q"{
+        if jogadaAux.lowercased() == "q"{
             break
         } else {
-            voceGanhou(jogada: jogadaAux)
+            voceGanhou(jogadaAux: jogadaAux)
         }
     }
-} while loop
+} while true
 
 print("Adeus!")
 
