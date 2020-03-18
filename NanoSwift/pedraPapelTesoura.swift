@@ -35,26 +35,23 @@ func voceGanhou(jogada:String){
             print("Empate!")
         }
     default:
-        print("")
+        print("Mas a sua jogada foi inválida.")
     }
 }
 
-let possiveisJogadas = ["pedra", "papel", "tesoura"]
-
-print("PEDRA, PAPEL ou TESOURA! Faça a sua jogada digitando pedra, papel ou tesoura. Digite q para sair.\n")
+print("PEDRA, PAPEL ou TESOURA! Escolha digitando pedra, papel ou tesoura. Digite q para sair.\n")
 
 var loop = true
 
 repeat {
+    print("\nFaça sua jogada:")
     let jogada = readLine()
     print("")
-    if jogada == "q"{
-        loop = false
-    } else {
-        if let jogadaAux = jogada, possiveisJogadas.contains(jogadaAux){
-            voceGanhou(jogada: jogadaAux)
+    if let jogadaAux = jogada{ 
+        if jogada == "q"{
+            break
         } else {
-            print("Jogada inválida.\n")
+            voceGanhou(jogada: jogadaAux)
         }
     }
 } while loop
