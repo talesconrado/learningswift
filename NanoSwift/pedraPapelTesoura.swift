@@ -2,7 +2,7 @@ import Foundation
 
 //USANDO CONTROLES DE FLUXO 
 //Learning Objectives 245, 246, 247, 249, 263, 327, 329, 330, 333, 343, 344, 345, 370, 371
-//Usando pedra, papel e tesoura:
+//Aplicando em pedra, papel e tesoura:
 
 func voceGanhou(jogada:String){
     let possiveisJogadas = ["pedra", "papel", "tesoura"]
