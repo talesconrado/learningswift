@@ -13,7 +13,7 @@ class Tabuleiro: Quadrado{
 }
 
 //Classe jogo da velha que aplica a criaçao de um tabuleiro na tela do usuario
-class JogoDaVelha: Tabuleiro {
+class TabuleiroDeJogoDaVelha: Tabuleiro {
     var linhasDoTabuleiro: [[String]] = []
     
     //usando override
@@ -50,8 +50,7 @@ class JogoDaVelha: Tabuleiro {
     }
 }
 
-
-let novoJogo = JogoDaVelha(tamanhoDoLado: 3)
+let novoJogo = TabuleiroDeJogoDaVelha(tamanhoDoLado: 3)
 novoJogo.mostrarTabuleiro()
 novoJogo.limparTabuleiro()
 novoJogo.mostrarTabuleiro()
