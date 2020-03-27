@@ -36,19 +36,15 @@ class Mapa{
     }
     
     //funcao informando se é possivel ir ate lugar X
-    func possoAndarAteAqui(posicaoPersonagem: Cartesiano)throws->Bool{
-        if posicaoPersonagem.posicaoX <= tamanhoDoLado && posicaoPersonagem.posicaoY <= tamanhoDoLado{
-            return true
-        } else {
+    func possoAndarAteAqui(posicaoPersonagem: Cartesiano)throws{
+        guard posicaoPersonagem.posicaoX <= tamanhoDoLado && posicaoPersonagem.posicaoY <= tamanhoDoLado else{
             throw MapaErrors.foraDosLimites
         }
     }
     
     //funcao dizendo se o jogador chegou até a porta ou não
     func possoEntrarAqui(posicaoPersonagem:Cartesiano)throws->Bool{
-        if posicaoPersonagem.posicaoY == porta && posicaoPersonagem.posicaoX == tamanhoDoLado{
-            return true
-        } else {
+        guard posicaoPersonagem.posicaoY == porta && posicaoPersonagem.posicaoX == tamanhoDoLado else{
             throw MapaErrors.issoNaoEhUmaPorta
         }
     }
@@ -76,7 +72,7 @@ class Mapa{
 
 class Personagem{
     var vida = 3
-    var posicao = Cartesiano(posicaoX:0, posicaoY:0)
+    var posicao = Cartesiano(posicaoX:0, posicaoY:0) 
  
     func andarParaCima(){
         posicao.posicaoY += 1        
@@ -118,6 +114,7 @@ class Personagem{
 class Jogo{
 
     let personagem = Personagem()
+    var posicaoPersonagem = Cartesiano(posicaoX:0, posicaoY:0)
     let mapa:Mapa
 
     init?(){
@@ -127,33 +124,54 @@ class Jogo{
             return nil
         }
         mapa = Mapa(tamanhoDoLado: tamanhoInt)
+        posicaoPersonagem = personagem.posicao
+    }
+
+
+    func handler(escolha:Int)throws{
+        switch escolha{
+            case 1:
+            personagem.andarParaCima()
+            try mapa.possoAndarAteAqui(posicaoPersonagem: posicaoPersonagem)
+            case 2:
+            personagem.andarParaBaixo()
+            try mapa.possoAndarAteAqui(posicaoPersonagem: posicaoPersonagem)
+            case 3:
+            personagem.andarParaDireita()
+            try mapa.possoAndarAteAqui(posicaoPersonagem: posicaoPersonagem)
+            case 4:
+            personagem.andarParaEsquerda()
+            try mapa.possoAndarAteAqui(posicaoPersonagem: posicaoPersonagem)
+            case 5:
+            let fimDeJogo = try mapa.possoEntrarAqui(posicaoPersonagem: posicaoPersonagem)
+            if fimDeJogo{
+                print("Você ganhou!")
+            }
+            default:
+            print("Escolha inválida.")
+        }
     }
     
-    func esperarJogada(){
+
+    func esperarJogada() throws {
         print("O que você quer fazer?")
         print("""
-        1. Andar para frente
-        2. Andar para trás
+        1. Andar para cima
+        2. Andar para baixo
         3. Andar para a direita
         4. Andar para a esquerda
+        5. Ver se tem uma porta por perto.
         
         Digite sua escolha:
         """)
-    
+        let escolha = readLine(strippingNewline: true)
+        guard let escolhaAux = escolha, let escolhaInt = Int(escolhaAux), (escolhaInt <= 5 && escolhaInt >= 1) else {
+            print("Escolha inválida.")
+            return
+        }
+        try handler(escolha:escolhaInt)
     }
-
-
 }
-
-print("O que você quer fazer?")
-print("""
-1. Andar para frente
-2. Andar para trás
-3. Andar para a direita
-4. Andar para a esquerda
-
-Digite sua escolha:
-""")
 
 
 
