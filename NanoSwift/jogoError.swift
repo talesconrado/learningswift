@@ -40,7 +40,7 @@ class Mapa{
         if posicaoPersonagem.posicaoX <= tamanhoDoLado && posicaoPersonagem.posicaoY <= tamanhoDoLado{
             return true
         } else {
-            throw MapErrors.foraDosLimites
+            throw MapaErrors.foraDosLimites
         }
     }
     
@@ -49,7 +49,7 @@ class Mapa{
         if posicaoPersonagem.posicaoY == porta && posicaoPersonagem.posicaoX == tamanhoDoLado{
             return true
         } else {
-            throw MapErrors.issoNaoEhUmaPorta
+            throw MapaErrors.issoNaoEhUmaPorta
         }
     }
     
@@ -67,7 +67,7 @@ class Mapa{
         let monstroMorto = posicaoDosMonstros.firstIndex(of: monstro )
         
         guard let monstroMortoAux = monstroMorto else{
-            throw MapErrors.monstroNaoExiste
+            throw MapaErrors.monstroNaoExiste
         }
         posicaoDosMonstros.remove(at: monstroMortoAux)
     }
@@ -120,18 +120,40 @@ class Jogo{
     let personagem = Personagem()
     let mapa:Mapa
 
-    init(){
+    init?(){
         print("Para começar digite o tamanho do mapa que você deseja jogar, um dígito: ")
         let tamanhoMapa = readLine(strippingNewline: true)
-        if let tamanhoAux = tamanhoMapa, let tamanhoInt = Int(tamanhoAux){
-            mapa = Mapa(tamanhoDoLado: tamanhoInt)
+        guard let tamanhoAux = tamanhoMapa, let tamanhoInt = Int(tamanhoAux) else{
+            return nil
         }
-        else {
-            print("Tamanho inválido.")
-        }
+        mapa = Mapa(tamanhoDoLado: tamanhoInt)
+    }
+    
+    func esperarJogada(){
+        print("O que você quer fazer?")
+        print("""
+        1. Andar para frente
+        2. Andar para trás
+        3. Andar para a direita
+        4. Andar para a esquerda
+        
+        Digite sua escolha:
+        """)
+    
     }
 
+
 }
+
+print("O que você quer fazer?")
+print("""
+1. Andar para frente
+2. Andar para trás
+3. Andar para a direita
+4. Andar para a esquerda
+
+Digite sua escolha:
+""")
 
 
 
