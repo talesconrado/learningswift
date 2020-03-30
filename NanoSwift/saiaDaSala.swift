@@ -32,10 +32,12 @@ class Mapa{
         }
     }
 
+    //inicializador de tamanho padrao escolhido como 5
     convenience init(){
         self.init(tamanho:5)
     }
 
+    //possiveis situacoes a serem triggeradas
     enum MapaSituations{
         case encontrouMonstro
         case encontrouPorta
@@ -43,6 +45,7 @@ class Mapa{
         case lugarVazio
     }
 
+    //caso ache uma parede ele diz que está lá
     func achouParede(posicaoPersonagem:Coordenadas)->Bool{
         if posicaoPersonagem.x == tamanho || posicaoPersonagem.y == tamanho{
             return true
@@ -50,6 +53,7 @@ class Mapa{
         return false
     }
 
+    //caso encontre um monstro ele retorna true e fala que vai ter algo
     func achouMonstro(posicaoPersonagem:Coordenadas)->Bool{
         if monstros.contains(posicaoPersonagem){
             return true
@@ -57,6 +61,7 @@ class Mapa{
         return false
     }
 
+    //caso ache a porta ele diz para o jogador e ele pode tentar entrar
     func achouPorta(posicaoPersonagem:Coordenadas)->Bool{
         if posicaoPersonagem.x == porta.x && posicaoPersonagem.y == porta.y{
             return true
@@ -64,6 +69,7 @@ class Mapa{
         return false
     }
 
+    //uniao de todas as situacoes em uma funcao unica
     func eventosNoMapa(posicaoPersonagem:Coordenadas)throws ->MapaSituations{
         if achouMonstro(posicaoPersonagem: posicaoPersonagem){
             return .encontrouMonstro
@@ -80,6 +86,7 @@ class Mapa{
         return .lugarVazio
     }
 
+    //caso o jogador ganhe a luta com o monstro ele pode ser removido
     func removerMonstro(posicaoMonstro:Coordenadas)->Bool{
         if let index = monstros.firstIndex(of: posicaoMonstro){
             monstros.remove(at: index)
@@ -170,7 +177,27 @@ class Jogo{
         return nil
     }
 
-    func loopPrincipal(){
+    func lutando(posicaoPersonagem:Coordenadas){
+        
+        var ganhou = false
+
+        repeat {
+            print("Atacando monstro!")
+            ganhou = jogador.atacarMonstro(posicaoPersonagem: posicaoPersonagem)
+            if ganhou{
+                print("Você o derrotou!")
+            } else {
+                print("Você perdeu vida... mas não o derrotou ainda. Vida atual: \(jogador.vida)")
+                if jogador.vida == 0{
+                    print("FIM DE JOGO")
+                    break
+                }
+            }
+        } while !(ganhou)
+
+    }
+
+    func loopPrincipal()->Bool{
         
         var escolha:Direcao?
 
@@ -178,13 +205,35 @@ class Jogo{
             escolha = escolhas()
         } while escolha == nil
 
-        
+        jogador.andar(direcao: escolha!)
 
+        let evento = try? mapa.eventosNoMapa(posicaoPersonagem: jogador.posicaoPersonagem)
+
+        switch evento{
+            case .encontrouMonstro:
+            lutando(posicaoPersonagem: jogador.posicaoPersonagem)
+            case .chegouNaParede:
+            print("Você consegue ver uma parede perto...")
+            case .encontrouPorta:
+            print("Você chegou até a saída! Parabéns!")
+            return false
+            case .lugarVazio:
+            print("Nada demais por aqui... apenas escuridão.")
+            case nil:
+            print("Erro.")
+        }
+        return true
     }
-
 }
 
-let mapa = Mapa()
-print(mapa.porta)
-let posicaoPersonagem = mapa.monstros[0]
-print(try mapa.eventosNoMapa(posicaoPersonagem: posicaoPersonagem))
+let jogo = Jogo()
+
+var continuar = true
+
+repeat {
+    continuar = jogo.loopPrincipal()
+    print("Posicao personagem: \(jogo.jogador.posicaoPersonagem)")
+    print("Posicao porta: \(jogo.mapa.porta)")
+    print("Vida atual: \(jogo.jogador.vida)")
+    print("\n\n")
+} while continuar
